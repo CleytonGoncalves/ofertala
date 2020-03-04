@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cleytongoncalves.ofertala.R
 import com.cleytongoncalves.ofertala.data.model.Auction
 import com.cleytongoncalves.ofertala.features.main.AuctionAdapter.AuctionViewHolder
+import com.cleytongoncalves.ofertala.util.loadImageFromUrl
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import kotlinx.android.extensions.LayoutContainer
@@ -24,7 +25,9 @@ class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auct
         auctionVH: AuctionViewHolder, position: Int, auction: Auction
     ) {
         auctionVH.setAuctionId(auction.id)
+        auctionVH.setImage(auction.img)
         auctionVH.setTitle(auction.title)
+        auctionVH.setSeller(auction.sellerName)
         auctionVH.setEndTime(auction.endTime)
     }
 
@@ -51,8 +54,19 @@ class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auct
             auctionId = id
         }
 
+        internal fun setImage(imgSrc: String?) {
+            if (imgSrc != null)
+                auction_img.loadImageFromUrl(imgSrc)
+            else
+                auction_img.setImageResource(R.drawable.painting_placeholder)
+        }
+
         internal fun setTitle(title: String) {
             auction_title.text = title
+        }
+
+        internal fun setSeller(seller: String) {
+            auction_seller.text = seller
         }
 
         internal fun setEndTime(endTime: Date) {

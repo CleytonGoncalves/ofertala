@@ -17,19 +17,22 @@ data class Auction(
     val endTime: Date,
     val sellerId: DocumentReference?,
     val sellerName: String,
-    val currentAsk: Double
+    val currentAsk: Double,
+    val img: String?
 ) {
+    
     constructor() : this(
-    "",
-    "",
-    "",
-    false,
-    0.00,
-    0.00,
-    Date(),
-    Date(),
-    null,
-    "",
-        0.00
+        "",
+        "",
+        "",
+        false,
+        0.00,
+        0.00,
+        Date(),
+        Date(),
+        null,
+        "",
+        0.00,
+        null
     )
 }

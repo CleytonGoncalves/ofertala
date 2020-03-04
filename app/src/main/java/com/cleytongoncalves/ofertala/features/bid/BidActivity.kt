@@ -10,6 +10,7 @@ import com.cleytongoncalves.ofertala.R
 import com.cleytongoncalves.ofertala.data.model.Auction
 import com.cleytongoncalves.ofertala.data.model.Bid
 import com.cleytongoncalves.ofertala.features.base.BaseActivity
+import com.cleytongoncalves.ofertala.util.loadImageFromUrl
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -90,10 +91,15 @@ class BidActivity : BaseActivity() {
                 
                 val auction = snapshot!!.toObject<Auction>()!!
                 
+                if (auction.img != null)
+                    auction_img.loadImageFromUrl(auction.img)
+                else
+                    auction_img.setImageResource(R.drawable.painting_placeholder)
+                
                 auction_title.text = auction.title
                 subtitle.text = auction.sellerName
                 bidParams.text =
-                    "Start at \$${auction.startVal} · Increment of \$${auction.minIncrement}"
+                    "Starts at \$${auction.startVal} · Increment of \$${auction.minIncrement}"
                 currentAsk.text = "Current Ask: \$${auction.currentAsk}"
                 end_time.text = "Ends at ${DateUtils.getRelativeTimeSpanString(
                     auction.endTime.time, System.currentTimeMillis(), DateUtils.YEAR_IN_MILLIS

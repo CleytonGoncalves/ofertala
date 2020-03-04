@@ -2,43 +2,74 @@
 
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/auction_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    android:background="?attr/selectableItemBackground"
-    android:layout_margin="8dp">
+    style="@style/Widget.MaterialComponents.CardView"
+    app:cardBackgroundColor="@color/cardview_dark_background"
+    android:layout_marginLeft="@dimen/mtrl_card_spacing"
+    android:layout_marginTop="@dimen/mtrl_card_spacing"
+    android:layout_marginRight="@dimen/mtrl_card_spacing"
+    android:layout_marginBottom="@dimen/mtrl_card_spacing">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingBottom="12dp">
+
+        <ImageView
+            android:id="@+id/auction_img"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/googleg_standard_color_18"/>
 
         <TextView
             android:id="@+id/auction_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="2dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:textColor="@color/common_google_signin_btn_text_dark"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             tools:text="Relógio do Obama" />
 
-        <TextView
-            android:id="@+id/auction_endTime"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:drawableStart="@drawable/ic_access_time_black_24dp"
-            android:drawablePadding="4dp"
-            android:padding="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textAlignment="viewEnd"
-            tools:text="5d 4h" />
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/auction_seller"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="#CCCCCC"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                tools:text="Michelle Obama" />
+
+            <TextView
+                android:id="@+id/auction_endTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_access_time_black_24dp"
+                android:drawablePadding="4dp"
+                android:drawableTint="#CCCCCC"
+                android:gravity="center_vertical"
+                android:textColor="#CCCCCC"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAlignment="viewEnd"
+                tools:text="5d 4h" />
+
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 
