@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "302948147735",
+    "firebase_url": "https://ofertala-app.firebaseio.com",
+    "project_id": "ofertala-app",
+    "storage_bucket": "ofertala-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302948147735:android:cc89c916f29a05c08b3252",
+        "android_client_info": {
+          "package_name": "com.cleytongoncalves.ofertala"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302948147735-nloe40isrn1qek1dlss371jr4u5206vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC45oTVX1yLmiBCWxgbPm4qAQVQCZWWwlI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302948147735-nloe40isrn1qek1dlss371jr4u5206vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
