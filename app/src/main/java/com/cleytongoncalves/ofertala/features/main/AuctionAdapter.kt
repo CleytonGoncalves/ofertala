@@ -81,7 +81,8 @@ class AuctionAdapter internal constructor(
             auction_endTime.text = DateUtils.getRelativeTimeSpanString(
                 endTime.time,
                 System.currentTimeMillis(),
-                DateUtils.YEAR_IN_MILLIS
+                DateUtils.MINUTE_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_ALL
             )
         }
     }

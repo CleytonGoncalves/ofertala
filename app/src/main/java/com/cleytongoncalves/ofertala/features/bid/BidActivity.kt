@@ -106,7 +106,10 @@ class BidActivity : BaseActivity() {
                     "Starts at \$${auction.startVal} · Increment of \$${auction.minIncrement}"
                 currentAsk.text = "Current Ask: \$${auction.currentAsk}"
                 end_time.text = "Ends at ${DateUtils.getRelativeTimeSpanString(
-                    auction.endTime.time, System.currentTimeMillis(), DateUtils.YEAR_IN_MILLIS
+                    auction.endTime.time,
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_ALL
                 )}"
                 
                 makeBidBtn.isEnabled = true
