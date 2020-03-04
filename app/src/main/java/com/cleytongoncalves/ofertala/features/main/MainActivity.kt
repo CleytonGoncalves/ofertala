@@ -1,6 +1,7 @@
 package com.cleytongoncalves.ofertala.features.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cleytongoncalves.ofertala.R
 import com.cleytongoncalves.ofertala.data.model.Auction
@@ -26,7 +27,7 @@ class MainActivity : BaseActivity(), AuctionClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         setSupportActionBar(main_toolbar)
         setupRecyclerView()
     }
@@ -36,7 +37,7 @@ class MainActivity : BaseActivity(), AuctionClickListener {
             .setQuery(getAuctionDataQuery(), Auction::class.java)
             .build()
 
-        auctionAdapter = AuctionAdapter(options)
+        auctionAdapter = AuctionAdapter(options, ::hideProgressBar)
         auctionAdapter!!.setClickListener(this)
 
         recyclerAuction?.apply {
@@ -58,5 +59,9 @@ class MainActivity : BaseActivity(), AuctionClickListener {
         return Firebase.firestore
             .collection("/auctions")
             .orderBy("startTime", Query.Direction.DESCENDING)
+    }
+    
+    private fun hideProgressBar() {
+        progress.visibility = View.GONE
     }
 }
