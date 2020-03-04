@@ -7,6 +7,7 @@ import android.text.format.DateUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cleytongoncalves.ofertala.LOGGED_USER_ID
 import com.cleytongoncalves.ofertala.R
+import com.cleytongoncalves.ofertala.R.drawable
 import com.cleytongoncalves.ofertala.data.model.Auction
 import com.cleytongoncalves.ofertala.data.model.Bid
 import com.cleytongoncalves.ofertala.features.base.BaseActivity
@@ -53,6 +54,7 @@ class BidActivity : BaseActivity() {
         setSupportActionBar(auction_toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setHomeAsUpIndicator(drawable.ic_keyboard_arrow_left_black_24dp)
         
         loadAuctionData()
         setupRecyclerView()
@@ -90,6 +92,8 @@ class BidActivity : BaseActivity() {
                 }
                 
                 val auction = snapshot!!.toObject<Auction>()!!
+                
+                title = "Live Auction: ${auction.title}"
                 
                 if (auction.img != null)
                     auction_img.loadImageFromUrl(auction.img)

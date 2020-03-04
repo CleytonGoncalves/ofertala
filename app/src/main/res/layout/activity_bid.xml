@@ -14,7 +14,10 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/auction_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="50dp"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            app:subtitleTextAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            android:background="@color/chuck_status_default"
             app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/AppTheme.ToolbarStyle" />
 
