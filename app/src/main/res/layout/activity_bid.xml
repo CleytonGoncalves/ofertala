@@ -24,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="8dp"
         >
 
         <ImageView
@@ -32,6 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             tools:src="@drawable/common_google_signin_btn_icon_dark" />
 
         <com.google.android.material.card.MaterialCardView
@@ -40,10 +42,9 @@
             android:layout_height="match_parent"
             style="@style/Widget.MaterialComponents.CardView"
             app:cardBackgroundColor="@color/cardview_dark_background"
-            android:layout_marginLeft="@dimen/mtrl_card_spacing"
-            android:layout_marginTop="@dimen/mtrl_card_spacing"
-            android:layout_marginRight="@dimen/mtrl_card_spacing"
-            android:layout_marginBottom="@dimen/mtrl_card_spacing"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="-24dp"
+            app:cardCornerRadius="24dp"
             >
 
             <LinearLayout
@@ -114,7 +115,7 @@
                     android:id="@+id/recyclerBid"
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="140dp" />
+                    android:layout_height="140dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/makeBidBtn"
@@ -138,13 +139,6 @@
         android:id="@+id/errorView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:visibility="gone" />
 
 </LinearLayout>
