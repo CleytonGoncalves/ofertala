@@ -14,7 +14,7 @@ data class Auction(
     val minIncrement: Double,
     val startTime: Date,
     val endTime: Date,
-    val sellerId: String,
+    val sellerId2: String,
     val sellerName: String,
     val currentAsk: Double,
     val currentAskBidId: String,
