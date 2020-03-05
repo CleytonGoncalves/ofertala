@@ -14,6 +14,9 @@ data class Bid(
     val winner: Boolean,
     val auctionTitle: String
 ) {
+    companion object {
+        const val COLLECTION_NAME = "bids"
+    }
     
     constructor() : this(
         "",

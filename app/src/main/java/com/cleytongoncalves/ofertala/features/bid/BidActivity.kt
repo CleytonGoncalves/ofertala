@@ -10,6 +10,7 @@ import com.cleytongoncalves.ofertala.LOGGED_USER_ID
 import com.cleytongoncalves.ofertala.R
 import com.cleytongoncalves.ofertala.data.model.Auction
 import com.cleytongoncalves.ofertala.data.model.Bid
+import com.cleytongoncalves.ofertala.data.model.User
 import com.cleytongoncalves.ofertala.features.base.BaseActivity
 import com.cleytongoncalves.ofertala.util.loadImageFromUrl
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -84,7 +85,7 @@ class BidActivity : BaseActivity() {
     private fun loadAuctionData() {
         actionBtn.isEnabled = false
         
-        firestore.collection("/auctions").document(auctionId!!)
+        firestore.collection(Auction.COLLECTION_NAME).document(auctionId!!)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     Timber.e(exception)
@@ -149,18 +150,18 @@ class BidActivity : BaseActivity() {
             
             firestore.runTransaction { transaction ->
                 val auctionDoc = firestore
-                    .collection("/auctions")
+                    .collection(Auction.COLLECTION_NAME)
                     .document(auctionId!!)
                 
                 // All reads must be done before writes
                 val auctionSnap = transaction.get(auctionDoc)
                 
                 val bidderDoc = auctionDoc
-                    .collection("/bids")
-                    .document(auctionSnap.getString("lastBidId")!!)
+                    .collection(Bid.COLLECTION_NAME)
+                    .document(auctionSnap.getString(Auction::lastBidId.name)!!)
                 
-                transaction.update(auctionDoc, "sold", true)
-                transaction.update(bidderDoc, "winner", true)
+                transaction.update(auctionDoc, Auction::sold.name, true)
+                transaction.update(bidderDoc, Bid::winner.name, true)
             }.addOnFailureListener { exception -> Timber.e(exception) }
         }
     }
@@ -172,32 +173,34 @@ class BidActivity : BaseActivity() {
             it.isEnabled = false
             
             val auction = firestore
-                .collection("/auctions")
+                .collection(Auction.COLLECTION_NAME)
                 .document(auctionId!!)
             
             firestore.runTransaction { transaction ->
                     // All reads must be done before writes
                     val auctionSnap = transaction.get(auction)
-                    val bidderSnap = transaction.get(firestore.document("/users/${LOGGED_USER_ID}"))
+                    val bidUserSnap =
+                        transaction.get(firestore.document("${User.COLLECTION_NAME}/${LOGGED_USER_ID}"))
                     
-                    val auctionAsk = auctionSnap.getDouble("currentAsk")!!
+                    val auctionAsk = auctionSnap.getDouble(Auction::currentAsk.name)!!
                     
-                    val newBidRef = auction.collection("/bids").document()
+                    val newBidRef = auction.collection(Bid.COLLECTION_NAME).document()
                     val newBid = Bid(
                         newBidRef.id,
                         auctionAsk,
-                        bidderSnap.id,
-                        bidderSnap.getString("name")!!,
+                        bidUserSnap.id,
+                        bidUserSnap.getString(User::name.name)!!,
                         Date(),
                         false,
-                        auctionSnap.getString("title")!!
+                        auctionSnap.getString(Auction::title.name)!!
                     )
                     
-                    val newAskValue = auctionAsk + auctionSnap.getDouble("minIncrement")!!
+                    val newAskValue =
+                        auctionAsk + auctionSnap.getDouble(Auction::minIncrement.name)!!
                     
                     transaction.set(newBidRef, newBid)
-                    transaction.update(auction, "currentAsk", newAskValue)
-                    transaction.update(auction, "lastBidId", newBid.id)
+                    transaction.update(auction, Auction::currentAsk.name, newAskValue)
+                    transaction.update(auction, Auction::lastBidId.name, newBid.id)
                 }
                 .addOnFailureListener { exception -> Timber.e(exception) }
                 .addOnCompleteListener { actionBtn.isEnabled = !isAuctionFinished }
@@ -206,10 +209,10 @@ class BidActivity : BaseActivity() {
     
     private fun getBidDataQuery(): Query {
         return firestore
-            .collection("/auctions")
+            .collection(Auction.COLLECTION_NAME)
             .document(auctionId!!)
-            .collection("/bids")
-            .orderBy("value", Query.Direction.DESCENDING)
+            .collection(Bid.COLLECTION_NAME)
+            .orderBy(Bid::value.name, Query.Direction.DESCENDING)
             .limit(15)
     }
 }

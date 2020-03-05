@@ -139,12 +139,12 @@ class MainActivity : BaseActivity() {
     
     private fun getAuctionFirestoreAdapterOptions(titleFilter: String?): FirestoreRecyclerOptions<Auction> {
         var query: Query = Firebase.firestore
-            .collection("/auctions")
+            .collection(Auction.COLLECTION_NAME)
         
         if (titleFilter != null)
-            query = query.whereArrayContainsAny("searchTerms", titleFilter.toLowerCase().split(" "))
+            query = query.whereArrayContainsAny(Auction::searchTerms.name, titleFilter.toLowerCase().split(" "))
         
-        query = query.orderBy("startTime", DESCENDING)
+        query = query.orderBy(Auction::startTime.name, DESCENDING)
         
         return FirestoreRecyclerOptions.Builder<Auction>()
             .setQuery(query, Auction::class.java)
@@ -153,9 +153,9 @@ class MainActivity : BaseActivity() {
     
     private fun getBidFirestoreAdapterOptions(): FirestoreRecyclerOptions<Bid> {
         val query: Query = Firebase.firestore
-            .collectionGroup("bids")
-            .whereEqualTo("bidderId", LOGGED_USER_ID)
-            .orderBy("timestamp", DESCENDING)
+            .collectionGroup(Bid.COLLECTION_NAME)
+            .whereEqualTo(Bid::bidderId.name, LOGGED_USER_ID)
+            .orderBy(Bid::timestamp.name, DESCENDING)
             .limit(3)
         
         return FirestoreRecyclerOptions.Builder<Bid>()

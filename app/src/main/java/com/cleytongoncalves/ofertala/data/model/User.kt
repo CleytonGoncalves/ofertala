@@ -7,6 +7,10 @@ data class User(
     val id: String,
     val name: String
 ) {
+    companion object {
+        const val COLLECTION_NAME = "users"
+    }
+    
     constructor() : this(
         "",
         ""
