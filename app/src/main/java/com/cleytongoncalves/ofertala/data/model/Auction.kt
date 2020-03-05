@@ -1,7 +1,6 @@
 package com.cleytongoncalves.ofertala.data.model
 
 import com.google.firebase.firestore.DocumentId
-import com.google.firebase.firestore.DocumentReference
 import java.util.*
 
 @Suppress("unused")
@@ -15,7 +14,7 @@ data class Auction(
     val minIncrement: Double,
     val startTime: Date,
     val endTime: Date,
-    val sellerId: DocumentReference?,
+    val sellerId: String,
     val sellerName: String,
     val currentAsk: Double,
     val img: String?
@@ -30,7 +29,7 @@ data class Auction(
         0.00,
         Date(),
         Date(),
-        null,
+        "",
         "",
         0.00,
         null
