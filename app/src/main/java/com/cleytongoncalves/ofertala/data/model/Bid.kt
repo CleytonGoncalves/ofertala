@@ -11,7 +11,7 @@ data class Bid(
     val bidderId: String,
     val bidderName: String,
     val timestamp: Date,
-    val isWinner: Boolean,
+    val winner: Boolean,
     val auctionTitle: String
 ) {
     

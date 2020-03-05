@@ -9,7 +9,7 @@ data class Auction(
     val id: String,
     val title: String,
     val description: String,
-    val isSold: Boolean,
+    val sold: Boolean,
     val startVal: Double,
     val minIncrement: Double,
     val startTime: Date,
@@ -17,6 +17,7 @@ data class Auction(
     val sellerId: String,
     val sellerName: String,
     val currentAsk: Double,
+    val currentAskBidId: String,
     val img: String?
 ) {
     
@@ -32,6 +33,7 @@ data class Auction(
         "",
         "",
         0.00,
+        "",
         null
     )
 }
