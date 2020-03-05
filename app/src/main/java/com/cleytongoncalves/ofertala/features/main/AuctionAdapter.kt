@@ -14,7 +14,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_bid.auction_title
 import kotlinx.android.synthetic.main.item_auction.*
-import java.util.*
 
 class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auction>) :
     FirestoreRecyclerAdapter<Auction, AuctionViewHolder>(options) {
@@ -28,7 +27,18 @@ class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auct
         auctionVH.setImage(auction.img)
         auctionVH.setTitle(auction.title)
         auctionVH.setSeller(auction.sellerName)
-        auctionVH.setEndTime(auction.endTime)
+        
+        if (auction.sold || auction.endTime.time <= System.currentTimeMillis())
+            auctionVH.setEndTime("Finished")
+        else
+            auctionVH.setEndTime(
+                DateUtils.getRelativeTimeSpanString(
+                    auction.endTime.time,
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_ALL
+                ).toString()
+            )
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuctionViewHolder {
@@ -69,13 +79,8 @@ class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auct
             auction_seller.text = seller
         }
         
-        internal fun setEndTime(endTime: Date) {
-            auction_endTime.text = DateUtils.getRelativeTimeSpanString(
-                endTime.time,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_ALL
-            )
+        internal fun setEndTime(endTime: String) {
+            auction_endTime.text = endTime
         }
     }
     

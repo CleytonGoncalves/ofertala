@@ -144,7 +144,7 @@ class MainActivity : BaseActivity() {
         if (titleFilter != null)
             query = query.whereArrayContainsAny(Auction::searchTerms.name, titleFilter.toLowerCase().split(" "))
         
-        query = query.orderBy(Auction::startTime.name, DESCENDING)
+        query = query.orderBy(Auction::sold.name).orderBy(Auction::endTime.name)
         
         return FirestoreRecyclerOptions.Builder<Auction>()
             .setQuery(query, Auction::class.java)
