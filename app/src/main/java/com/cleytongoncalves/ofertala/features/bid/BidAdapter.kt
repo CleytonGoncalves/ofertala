@@ -20,6 +20,9 @@ class BidAdapter internal constructor(options: FirestoreRecyclerOptions<Bid>) :
         bidVH.setBidderName(bid.bidderName)
         bidVH.setBidValue("\$${bid.value}")
         bidVH.showWinnerIcon(bid.winner)
+        
+        if (bid.bidderImg != null)
+            bidVH.setBidderImage(bid.bidderImg)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BidViewHolder {

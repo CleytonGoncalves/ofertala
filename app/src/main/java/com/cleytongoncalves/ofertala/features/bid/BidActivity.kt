@@ -179,8 +179,10 @@ class BidActivity : BaseActivity() {
             firestore.runTransaction { transaction ->
                     // All reads must be done before writes
                     val auctionSnap = transaction.get(auction)
-                    val bidUserSnap =
-                        transaction.get(firestore.document("${User.COLLECTION_NAME}/${LOGGED_USER_ID}"))
+                    
+                    val bidUser = transaction
+                        .get(firestore.document("${User.COLLECTION_NAME}/${LOGGED_USER_ID}"))
+                        .toObject<User>()!!
                     
                     val auctionAsk = auctionSnap.getDouble(Auction::currentAsk.name)!!
                     
@@ -188,8 +190,9 @@ class BidActivity : BaseActivity() {
                     val newBid = Bid(
                         newBidRef.id,
                         auctionAsk,
-                        bidUserSnap.id,
-                        bidUserSnap.getString(User::name.name)!!,
+                        bidUser.id,
+                        bidUser.name,
+                        bidUser.img,
                         Date(),
                         false,
                         auctionSnap.getString(Auction::title.name)!!

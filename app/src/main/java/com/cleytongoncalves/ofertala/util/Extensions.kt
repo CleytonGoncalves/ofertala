@@ -2,18 +2,11 @@ package com.cleytongoncalves.ofertala.util
 
 import android.app.Activity
 import android.content.Context
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -23,7 +16,14 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,7 +33,8 @@ import java.util.*
  */
 
 fun ImageView.loadImageFromUrl(url: String) {
-    Glide.with(context)
+    //TODO: Shouldn't use applicationContext, this is just a workaround for my presentation
+    Glide.with(context.applicationContext)
             .load(url)
             .into(this)
 }

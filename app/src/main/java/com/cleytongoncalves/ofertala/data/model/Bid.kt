@@ -10,6 +10,7 @@ data class Bid(
     val value: Double,
     val bidderId: String,
     val bidderName: String,
+    val bidderImg: String?,
     val timestamp: Date,
     val winner: Boolean,
     val auctionTitle: String
@@ -23,6 +24,7 @@ data class Bid(
         0.00,
         "",
         "",
+        null,
         Date(),
         false,
         ""
