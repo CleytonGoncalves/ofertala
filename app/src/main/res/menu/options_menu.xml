@@ -7,4 +7,22 @@
         android:title="Buscar"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/changeUser"
+        android:icon="@drawable/ic_face_black_24dp"
+        android:title="Trocar usuário"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/michelle"
+                    android:title="Michelle Obama"/>
+                <item android:id="@+id/bill"
+                    android:title="Bill Clinton" />
+                <item android:id="@+id/trump"
+                    android:title="Donald Trump" />
+            </group>
+        </menu>
+    </item>
 </menu>

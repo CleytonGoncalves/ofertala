@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,9 +24,14 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
-    
     private var auctionAdapter: AuctionAdapter? = null
     private var bidHistoryAdapter: BidHistoryAdapter? = null
+    
+    private val userIdMap = hashMapOf(
+        R.id.michelle to "asT8x573w454hqeu1Peq",
+        R.id.bill to "Bity095wAb3EpNibJKKO",
+        R.id.trump to "1J9qtxlOPO6wo3alPXcy"
+    )
     
     override fun layoutId() = R.layout.activity_main
     
@@ -38,11 +44,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        title = "Live Auctions"
         setSupportActionBar(main_toolbar)
+        
         setupAuctionRecyclerView(getAuctionFirestoreAdapterOptions(null))
         setupBidRecyclerView(getBidFirestoreAdapterOptions())
-        
-        title = "Live Auctions"
     }
     
     override fun onNewIntent(intent: Intent?) {
@@ -51,13 +57,14 @@ class MainActivity : BaseActivity() {
         if (intent?.action == Intent.ACTION_SEARCH && intent.getStringExtra(SearchManager.QUERY) != null) {
             val filter = intent.getStringExtra(SearchManager.QUERY)
             auctionAdapter?.updateOptions(getAuctionFirestoreAdapterOptions(filter))
+        } else {
+            bidHistoryAdapter?.updateOptions(getBidFirestoreAdapterOptions())
         }
     }
     
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
         
-        // Associate searchable configuration with the SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         (menu.findItem(R.id.search).actionView as SearchView).apply {
             setSearchableInfo(searchManager.getSearchableInfo(componentName))
@@ -84,7 +91,20 @@ class MainActivity : BaseActivity() {
             })
         }
         
+        val currUserToCheckOnMenu = userIdMap.filterValues { it == LOGGED_USER_ID }.keys.first()
+        menu.findItem(currUserToCheckOnMenu).isChecked = true
+        
         return true
+    }
+    
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (userIdMap.containsKey(item.itemId)) {
+            LOGGED_USER_ID = userIdMap.getValue(item.itemId)
+            recreate()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
     
     override fun onStop() {
@@ -101,7 +121,7 @@ class MainActivity : BaseActivity() {
                 startActivity(BidActivity.getStartIntent(this@MainActivity, auctionId))
             }
         })
-    
+        
         recyclerAuction?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = auctionAdapter

@@ -5,7 +5,7 @@ import androidx.multidex.MultiDexApplication
 import com.singhajit.sherlock.core.Sherlock
 import timber.log.Timber
 
-const val LOGGED_USER_ID = "asT8x573w454hqeu1Peq"
+var LOGGED_USER_ID = "asT8x573w454hqeu1Peq"
 class Application : MultiDexApplication() {
     
     companion object {
