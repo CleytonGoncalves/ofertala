@@ -20,6 +20,7 @@ class BidHistoryAdapter internal constructor(options: FirestoreRecyclerOptions<B
     ) {
         bidVH.setTitle(bid.auctionTitle)
         bidVH.setValue("\$${bid.value}")
+        bidVH.showWinnerIcon(bid.winner)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BidViewHolder {
@@ -30,6 +31,10 @@ class BidHistoryAdapter internal constructor(options: FirestoreRecyclerOptions<B
     
     inner class BidViewHolder internal constructor(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!), LayoutContainer {
+    
+        internal fun showWinnerIcon(show: Boolean) {
+            winnerImg.visibility = if (show) View.VISIBLE else View.GONE
+        }
         
         internal fun setTitle(title: String) {
             auction_title.text = title

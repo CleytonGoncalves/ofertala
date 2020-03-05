@@ -19,6 +19,7 @@ class BidAdapter internal constructor(options: FirestoreRecyclerOptions<Bid>) :
     override fun onBindViewHolder(bidVH: BidViewHolder, position: Int, bid: Bid) {
         bidVH.setBidderName(bid.bidderName)
         bidVH.setBidValue("\$${bid.value}")
+        bidVH.showWinnerIcon(bid.winner)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BidViewHolder {
@@ -35,6 +36,10 @@ class BidAdapter internal constructor(options: FirestoreRecyclerOptions<Bid>) :
         
         internal fun setBidderImage(imageUrl: String) {
             bidder_img.loadImageFromUrl(imageUrl)
+        }
+        
+        internal fun showWinnerIcon(show: Boolean) {
+            winnerImg.visibility = if (show) View.VISIBLE else View.GONE
         }
         
         internal fun setBidderName(name: String) {

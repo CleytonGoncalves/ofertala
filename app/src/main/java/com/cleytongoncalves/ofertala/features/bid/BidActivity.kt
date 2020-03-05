@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cleytongoncalves.ofertala.LOGGED_USER_ID
 import com.cleytongoncalves.ofertala.R
@@ -26,6 +27,8 @@ class BidActivity : BaseActivity() {
     private val firestore: FirebaseFirestore = Firebase.firestore
     private var auctionId: String? = null
     private var bidAdapter: BidAdapter? = null
+    
+    private var isAuctionFinished = false
     
     companion object {
         private const val EXTRA_AUCTION_ID = "EXTRA_AUCTION_ID"
@@ -57,8 +60,6 @@ class BidActivity : BaseActivity() {
         
         loadAuctionData()
         setupRecyclerView()
-        
-        setupMakeBidButton()
     }
     
     override fun onStop() {
@@ -81,7 +82,7 @@ class BidActivity : BaseActivity() {
     }
     
     private fun loadAuctionData() {
-        makeBidBtn.isEnabled = false
+        actionBtn.isEnabled = false
         
         firestore.collection("/auctions").document(auctionId!!)
             .addSnapshotListener { snapshot, exception ->
@@ -111,12 +112,63 @@ class BidActivity : BaseActivity() {
                     DateUtils.FORMAT_ABBREV_ALL
                 )}"
                 
-                makeBidBtn.isEnabled = true
+                isAuctionFinished =
+                    auction.sold || System.currentTimeMillis() >= auction.endTime.time
+                
+                setupActionButton(auction.sellerId2 == LOGGED_USER_ID)
+                setupAuctionProgress()
             }
     }
     
-    private fun setupMakeBidButton() {
-        makeBidBtn.setOnClickListener {
+    private fun setupAuctionProgress() {
+        if (!isAuctionFinished) return
+        
+        auction_progress.apply {
+            isIndeterminate = false
+            progress = 0
+        }
+        
+        end_time.text = "Finished!"
+    }
+    
+    private fun setupActionButton(isSeller: Boolean) {
+        if (isSeller)
+            setupSellerActionButton()
+        else
+            setupBidderActionButton()
+        
+        actionBtn.isEnabled = !isAuctionFinished
+        actionBtn.visibility = View.VISIBLE
+    }
+    
+    private fun setupSellerActionButton() {
+        actionBtn.text = "Finish auction"
+        
+        actionBtn.setOnClickListener {
+            it.isEnabled = false
+            
+            firestore.runTransaction { transaction ->
+                val auctionDoc = firestore
+                    .collection("/auctions")
+                    .document(auctionId!!)
+                
+                // All reads must be done before writes
+                val auctionSnap = transaction.get(auctionDoc)
+                
+                val bidderDoc = auctionDoc
+                    .collection("/bids")
+                    .document(auctionSnap.getString("currentAskBidId")!!)
+                
+                transaction.update(auctionDoc, "sold", true)
+                transaction.update(bidderDoc, "winner", true)
+            }
+        }
+    }
+    
+    private fun setupBidderActionButton() {
+        actionBtn.text = "Make a bid"
+        
+        actionBtn.setOnClickListener {
             it.isEnabled = false
             
             val auction = firestore
@@ -143,8 +195,9 @@ class BidActivity : BaseActivity() {
                 )
                 
                 transaction.update(auction, "currentAsk", newAskValue)
+                transaction.update(auction, "currentAskBidId", newBid.id)
                 transaction.set(newBidRef, newBid)
-            }.addOnCompleteListener { makeBidBtn.isEnabled = true }
+            }.addOnCompleteListener { actionBtn.isEnabled = !isAuctionFinished }
         }
     }
     

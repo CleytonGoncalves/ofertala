@@ -19,7 +19,7 @@
             app:subtitleTextAppearance="@style/TextAppearance.MaterialComponents.Overline"
             android:background="@color/chuck_status_default"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/AppTheme.ToolbarStyle" />
+            android:theme="@style/AppTheme.ToolbarStyle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -121,7 +121,7 @@
                     android:layout_height="140dp"/>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/makeBidBtn"
+                    android:id="@+id/actionBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -129,8 +129,10 @@
                     android:layout_marginRight="16dp"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
+                    android:visibility="invisible"
+                    android:enabled="false"
                     app:cornerRadius="10dp"
-                    android:text="Make a bid"/>
+                    tools:text="Make a bid"/>
 
             </LinearLayout>
 
