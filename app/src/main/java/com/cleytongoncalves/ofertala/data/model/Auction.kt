@@ -17,7 +17,7 @@ data class Auction(
     val sellerId2: String,
     val sellerName: String,
     val currentAsk: Double,
-    val currentAskBidId: String,
+    val lastBidId: String,
     val img: String?
 ) {
     

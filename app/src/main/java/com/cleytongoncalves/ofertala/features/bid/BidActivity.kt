@@ -157,11 +157,11 @@ class BidActivity : BaseActivity() {
                 
                 val bidderDoc = auctionDoc
                     .collection("/bids")
-                    .document(auctionSnap.getString("currentAskBidId")!!)
+                    .document(auctionSnap.getString("lastBidId")!!)
                 
                 transaction.update(auctionDoc, "sold", true)
                 transaction.update(bidderDoc, "winner", true)
-            }
+            }.addOnFailureListener { exception -> Timber.e(exception) }
         }
     }
     
@@ -176,28 +176,31 @@ class BidActivity : BaseActivity() {
                 .document(auctionId!!)
             
             firestore.runTransaction { transaction ->
-                // All reads must be done before writes
-                val auctionSnap = transaction.get(auction)
-                val bidderSnap = transaction.get(firestore.document("/users/${LOGGED_USER_ID}"))
-                
-                val newAskValue =
-                    auctionSnap.getDouble("currentAsk")!! + auctionSnap.getDouble("minIncrement")!!
-                
-                val newBidRef = auction.collection("/bids").document()
-                val newBid = Bid(
-                    newBidRef.id,
-                    newAskValue,
-                    bidderSnap.id,
-                    bidderSnap.getString("name")!!,
-                    Date(),
-                    false,
-                    auctionSnap.getString("title")!!
-                )
-                
-                transaction.update(auction, "currentAsk", newAskValue)
-                transaction.update(auction, "currentAskBidId", newBid.id)
-                transaction.set(newBidRef, newBid)
-            }.addOnCompleteListener { actionBtn.isEnabled = !isAuctionFinished }
+                    // All reads must be done before writes
+                    val auctionSnap = transaction.get(auction)
+                    val bidderSnap = transaction.get(firestore.document("/users/${LOGGED_USER_ID}"))
+                    
+                    val auctionAsk = auctionSnap.getDouble("currentAsk")!!
+                    
+                    val newBidRef = auction.collection("/bids").document()
+                    val newBid = Bid(
+                        newBidRef.id,
+                        auctionAsk,
+                        bidderSnap.id,
+                        bidderSnap.getString("name")!!,
+                        Date(),
+                        false,
+                        auctionSnap.getString("title")!!
+                    )
+                    
+                    val newAskValue = auctionAsk + auctionSnap.getDouble("minIncrement")!!
+                    
+                    transaction.set(newBidRef, newBid)
+                    transaction.update(auction, "currentAsk", newAskValue)
+                    transaction.update(auction, "lastBidId", newBid.id)
+                }
+                .addOnFailureListener { exception -> Timber.e(exception) }
+                .addOnCompleteListener { actionBtn.isEnabled = !isAuctionFinished }
         }
     }
     
