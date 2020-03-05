@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chuck_status_default">
+    android:background="@color/chuck_status_default"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,21 +22,33 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerAuction"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        tools:visibility="visible" />
 
-    <com.cleytongoncalves.ofertala.features.common.ErrorView
-        android:id="@+id/viewError"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible" />
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
+        android:text="My Last Bids"
+        android:textColor="@color/common_google_signin_btn_text_dark" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerBid"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        tools:visibility="visible" />
+</LinearLayout>

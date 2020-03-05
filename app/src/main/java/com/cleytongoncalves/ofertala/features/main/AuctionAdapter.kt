@@ -16,18 +16,10 @@ import kotlinx.android.synthetic.main.activity_bid.auction_title
 import kotlinx.android.synthetic.main.item_auction.*
 import java.util.*
 
-class AuctionAdapter internal constructor(
-    options: FirestoreRecyclerOptions<Auction>,
-    val loadedCallback: () -> Unit
-) :
+class AuctionAdapter internal constructor(options: FirestoreRecyclerOptions<Auction>) :
     FirestoreRecyclerAdapter<Auction, AuctionViewHolder>(options) {
     
     private var clickListener: AuctionClickListener? = null
-    
-    override fun onViewAttachedToWindow(holder: AuctionViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        loadedCallback()
-    }
     
     override fun onBindViewHolder(
         auctionVH: AuctionViewHolder, position: Int, auction: Auction

@@ -5,37 +5,44 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cleytongoncalves.ofertala.LOGGED_USER_ID
 import com.cleytongoncalves.ofertala.R
 import com.cleytongoncalves.ofertala.data.model.Auction
+import com.cleytongoncalves.ofertala.data.model.Bid
 import com.cleytongoncalves.ofertala.features.base.BaseActivity
 import com.cleytongoncalves.ofertala.features.bid.BidActivity
 import com.cleytongoncalves.ofertala.features.main.AuctionAdapter.AuctionClickListener
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Query.Direction.DESCENDING
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), AuctionClickListener {
+class MainActivity : BaseActivity() {
     
     private var auctionAdapter: AuctionAdapter? = null
+    private var bidHistoryAdapter: BidHistoryAdapter? = null
     
     override fun layoutId() = R.layout.activity_main
     
     override fun onStart() {
         super.onStart()
         auctionAdapter!!.startListening()
+        bidHistoryAdapter!!.startListening()
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         setSupportActionBar(main_toolbar)
-        setupRecyclerView(getFirestoreAdapterOptions(null))
+        setupAuctionRecyclerView(getAuctionFirestoreAdapterOptions(null))
+        setupBidRecyclerView(getBidFirestoreAdapterOptions())
+        
+        title = "Live Auctions"
     }
     
     override fun onNewIntent(intent: Intent?) {
@@ -43,7 +50,7 @@ class MainActivity : BaseActivity(), AuctionClickListener {
         
         if (intent?.action == Intent.ACTION_SEARCH && intent.getStringExtra(SearchManager.QUERY) != null) {
             val filter = intent.getStringExtra(SearchManager.QUERY)
-            auctionAdapter?.updateOptions(getFirestoreAdapterOptions(filter))
+            auctionAdapter?.updateOptions(getAuctionFirestoreAdapterOptions(filter))
         }
     }
     
@@ -62,7 +69,7 @@ class MainActivity : BaseActivity(), AuctionClickListener {
                 override fun onQueryTextChange(newText: String): Boolean {
                     if (lastText != null && lastText!!.length > 1 && newText.isEmpty()) {
                         lastText = ""
-                        auctionAdapter?.updateOptions(getFirestoreAdapterOptions(null))
+                        auctionAdapter?.updateOptions(getAuctionFirestoreAdapterOptions(null))
                         onActionViewCollapsed()
                         return false
                     }
@@ -83,39 +90,57 @@ class MainActivity : BaseActivity(), AuctionClickListener {
     override fun onStop() {
         super.onStop()
         auctionAdapter?.stopListening()
+        bidHistoryAdapter?.stopListening()
     }
     
-    override fun onAuctionClick(auctionId: String) {
-        startActivity(BidActivity.getStartIntent(this, auctionId))
-    }
+    private fun setupAuctionRecyclerView(firestoreOptions: FirestoreRecyclerOptions<Auction>) {
+        auctionAdapter = AuctionAdapter(firestoreOptions)
+        
+        auctionAdapter!!.setClickListener(object : AuctionClickListener {
+            override fun onAuctionClick(auctionId: String) {
+                startActivity(BidActivity.getStartIntent(this@MainActivity, auctionId))
+            }
+        })
     
-    private fun setupRecyclerView(firestoreOptions: FirestoreRecyclerOptions<Auction>) {
-        progress.visibility = View.VISIBLE
-        
-        fun hideProgressBar() {
-            progress.visibility = View.GONE
-        }
-        
-        auctionAdapter = AuctionAdapter(firestoreOptions, ::hideProgressBar)
-        auctionAdapter!!.setClickListener(this)
-        
         recyclerAuction?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = auctionAdapter
         }
     }
     
-    private fun getFirestoreAdapterOptions(titleFilter: String?): FirestoreRecyclerOptions<Auction> {
+    private fun setupBidRecyclerView(firestoreOptions: FirestoreRecyclerOptions<Bid>) {
+        bidHistoryAdapter = BidHistoryAdapter(firestoreOptions)
+        
+        recyclerBid?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = bidHistoryAdapter
+            setHasFixedSize(true)
+        }
+    }
+    
+    private fun getAuctionFirestoreAdapterOptions(titleFilter: String?): FirestoreRecyclerOptions<Auction> {
         var query: Query = Firebase.firestore
             .collection("/auctions")
         
         if (titleFilter != null)
             query = query.whereArrayContainsAny("searchTerms", titleFilter.toLowerCase().split(" "))
         
-        query = query.orderBy("startTime", Query.Direction.DESCENDING)
+        query = query.orderBy("startTime", DESCENDING)
         
         return FirestoreRecyclerOptions.Builder<Auction>()
             .setQuery(query, Auction::class.java)
+            .build()
+    }
+    
+    private fun getBidFirestoreAdapterOptions(): FirestoreRecyclerOptions<Bid> {
+        val query: Query = Firebase.firestore
+            .collectionGroup("bids")
+            .whereEqualTo("bidderId", LOGGED_USER_ID)
+            .orderBy("timestamp", DESCENDING)
+            .limit(3)
+        
+        return FirestoreRecyclerOptions.Builder<Bid>()
+            .setQuery(query, Bid::class.java)
             .build()
     }
 }
