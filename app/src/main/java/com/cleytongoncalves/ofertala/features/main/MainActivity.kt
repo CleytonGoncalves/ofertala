@@ -44,7 +44,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        title = "Live Auctions"
         setSupportActionBar(main_toolbar)
         
         setupAuctionRecyclerView(getAuctionFirestoreAdapterOptions(null))

@@ -21,7 +21,7 @@
 
         <activity
             android:name="com.cleytongoncalves.ofertala.features.main.MainActivity"
-            android:label="@string/app_name"
+            android:label="Auctions"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
             <intent-filter>
